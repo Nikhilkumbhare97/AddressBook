@@ -1,19 +1,15 @@
-import java.util.Scanner;
-
-interface iContactDetails{
-	public void addDetails(String firstName, String LastName, String area, String city, String state, int zip, int phoneNumber, String email);
-}
+import java.util.*;
 
 class ContactDetails{
 
-	public final String firstName;
-	public final String lastName;
-	public final String area;
-	public final String city;
-	public final String state;
-	public final int zip;
-	public final int phoneNumber;
-	public final String email;
+	private String firstName;
+	private String lastName;
+	private String area;
+	private String city;
+	private String state;
+	private int zip;
+	private int phoneNumber;
+	private String email;
 
 	public ContactDetails(String firstName, String lastName, String area, String city , String state, int zip, int phoneNumber, String email){
 
@@ -25,6 +21,70 @@ class ContactDetails{
 		this.zip = zip;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
+	}
+
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public void setFirstName(String fname) {
+		this.firstName = fname;
+	}
+
+	public String getLastName() {
+		return this.lastName;
+	}
+
+   public void setLastName(String lname) {
+      this.lastName = lname;
+   }
+
+	public String getArea() {
+		return this.area;
+	}
+
+	public void setArea(String ar) {
+		this.area = ar;
+	}
+
+	public String getCity() {
+		return this.city;
+	}
+
+	public void setCity(String cty) {
+		this.city = cty;
+	}
+
+	public String getState() {
+		return this.state;
+	}
+
+	public void setState(String st) {
+		this.state = st;
+	}
+
+	public int getZip() {
+		return this.zip;
+	}
+
+	public void setZip(int zp) {
+		this.zip = zp;
+	}
+
+	public int getPhoneNumber() {
+	return this.phoneNumber;
+	}
+
+	public void setPhoneNumber(int phn) {
+		this.phoneNumber = phn;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String eml) {
+		this.email = eml;
 	}
 
 	public String toString(){
@@ -39,41 +99,14 @@ class ContactDetails{
 	}
 }
 
-public class AddressBook implements iContactDetails{
+public class AddressBook {
 
-	private static int numOfPerson;
-	private ContactDetails[] contactDetails;
+	static ArrayList<ContactDetails> list = new ArrayList<ContactDetails>();
 
-	public AddressBook(){
-		contactDetails = new ContactDetails[5];
-	}
+	static Scanner sc = new Scanner(System.in);
+	public static String check = "Y";
 
-	public void addDetails(String firstName, String lastName, String area, String city , String state, int zip, int phoneNumber, String email){
-		contactDetails [ numOfPerson ] = new ContactDetails(firstName, lastName, area, city, state, zip, phoneNumber, email);
-		numOfPerson++;
-	}
-
-	private void computeDetails(){
-		for (int i=0; i<numOfPerson; i++){
-			System.out.println(contactDetails[i]);
-		}
-	}
-
-	public static void main(String[] args){
-
-		System.out.println("Welcome To Address Book Problem");
-
-		Scanner sc=new Scanner(System.in);
-
-		System.out.println("Number Of Details to Add");
-		int numOfPerson=sc.nextInt();
-		String name=sc.nextLine();
-		AddressBook address = new AddressBook();
-
-
-		for (int i = 1; i <= numOfPerson; i++) {
-
-			System.out.println("Enter no. of details of: "+i);
+	public static void addDetails(){
 
 			System.out.println("Enter FirstName");
 			String firstName=sc.next();
@@ -92,8 +125,54 @@ public class AddressBook implements iContactDetails{
 			System.out.println("Enter Email");
 			String email=sc.next();
 
-			address.addDetails(firstName, lastName, area, city, state, zip, phoneNumber, email);
-			address.computeDetails();
+			list.add( new ContactDetails(firstName, lastName, area, city, state, zip, phoneNumber, email));
+			System.out.println(list);
+	}
+
+	public static String editDetails() {
+
+		String name1;
+		System.out.println("Enter First Name of Details to be Edited: ");
+		name1 = sc.next();
+
+				if (name1.equals(list.get(0).getFirstName())) {
+
+					System.out.println("Enter FirstName");
+					list.get(0).setFirstName(sc.next());
+					System.out.println("Enter LastName");
+					list.get(0).setLastName(sc.next());
+					System.out.println("Enter Area");
+					list.get(0).setArea(sc.next());
+					System.out.println("Enter CityName");
+					list.get(0).setCity(sc.next());
+					System.out.println("Enter StateName");
+					list.get(0).setState(sc.next());
+					System.out.println("Enter ZipCode");
+					list.get(0).setZip(sc.nextInt());
+					System.out.println("Enter PhoneNumber");
+					list.get(0).setPhoneNumber(sc.nextInt());
+					System.out.println("Enter Email");
+					list.get(0).setEmail(sc.next());
+
+					System.out.println(list.get(0));
+					return "Edited";
+				}else{
+					return "Name Not Available in List";
+				}
+	}
+
+	public static void main(String[] args){
+		System.out.println("Welcome To Address Book Problem");
+
+		addDetails();
+		System.out.print("Do you want to Edit That Contact ? (y/n)");
+		check=sc.next();
+		if (check.equals("y") || check.equals("Y")) {
+			System.out.println(editDetails());
+		}else{
+			System.out.println("Done");
 		}
+		for(int i=0; i<list.size(); i++)
+			System.out.println(list.get(i));
 	}
 }
