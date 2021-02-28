@@ -102,6 +102,9 @@ class ContactDetails{
 public class AddressBook {
 
 	static ArrayList<ContactDetails> list = new ArrayList<ContactDetails>();
+	static Map<String,AddressBook> map = new HashMap<>();
+	static int number=0;
+	static int a;
 
 	static Scanner sc = new Scanner(System.in);
 	public static String check = "Y";
@@ -132,7 +135,6 @@ public class AddressBook {
 			check=sc.next();
 
 			list.add( new ContactDetails(firstName, lastName, area, city, state, zip, phoneNumber, email));
-			System.out.println(list);
 		}
 	}
 
@@ -184,26 +186,51 @@ public class AddressBook {
 		return "Name Not Available in List";
 	}
 
+	public static String multipleAddressBook() {
+
+		System.out.println("Enter Name of Address Book");
+		String name=sc.next();
+		AddressBook addressBook = new AddressBook();
+		map.put(name, addressBook);
+		System.out.println("New Address Book: " +name);
+		return name;
+	}
+
 	public static void main(String[] args){
 		System.out.println("Welcome To Address Book Problem");
 
-		addDetails();
-		System.out.print("Do you want to Edit Contact ? (y/n)");
-		check=sc.next();
-		if (check.equals("y") || check.equals("Y")) {
-			System.out.println(editDetails());
-		}else{
-			System.out.println("Done");
-		}
-		System.out.print("Do you want to Delete Contact ? (y/n)");
-		check=sc.next();
-		if (check.equals("y") || check.equals("Y")) {
-			System.out.println(deleteDetails());
-		}else{
-			System.out.println("Done");
-		}
+		AddressBook addressBook = new AddressBook();
+		check = "Y";
+		while((check.equals("Y")) || (check.equals("y"))) {
 
-		for(int i=0; i<list.size(); i++)
-			System.out.println(list.get(i));
+			String name=multipleAddressBook();
+
+			addDetails();
+			System.out.print("Do you want to Edit Contact ? (y/n)");
+			check=sc.next();
+			if (check.equals("y") || check.equals("Y")) {
+				System.out.println(editDetails());
+			}else{
+				System.out.println("Done");
+			}
+			System.out.print("Do you want to Delete Contact ? (y/n)");
+			check=sc.next();
+			if (check.equals("y") || check.equals("Y")) {
+				System.out.println(deleteDetails());
+			}else{
+				System.out.println("Done");
+			}
+
+			System.out.println("Contacts in "+name+" AddressBook are: ");
+			for(a=number; a<list.size(); a++) {
+				System.out.println(list.get(a));
+				a++;
+			}
+			number=list.size();
+
+			System.out.println("Do You Want to Add More Address Book? (y/n)");
+			check=sc.next();
+	   }
+
 	}
 }
