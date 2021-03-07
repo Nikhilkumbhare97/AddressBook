@@ -2,14 +2,14 @@ import java.util.*;
 
 class ContactDetails{
 
-	public String firstName;
-	public String lastName;
-	public String area;
-	public String city;
-	public String state;
-	public int zip;
-	public int phoneNumber;
-	public String email;
+	private String firstName;
+	private String lastName;
+	private String area;
+	private String city;
+	private String state;
+	private int zip;
+	private int phoneNumber;
+	private String email;
 
 	public ContactDetails(String firstName, String lastName, String area, String city , String state, int zip, int phoneNumber, String email){
 
@@ -212,7 +212,15 @@ class AddressBookDetails {
 
 public class AddressBook {
 
-	public static int bookNumber=0;
+	private static int bookNumber=0;
+	private static String firstName;
+	private static String lastName;
+	private static String area;
+	private static String city;
+	private static String state;
+	private static int zip;
+	private static int phoneNumber;
+	private static String email;
 
 	public static Scanner sc=new Scanner(System.in);
 
@@ -234,6 +242,26 @@ public class AddressBook {
 				System.out.println("Pick Address Book Number");
 				bookNumber=Integer.parseInt(sc.next());
 		}
+	}
+
+	public static void personByState() {
+
+		System.out.println("Enter State Name");
+		state = sc.next();
+			for (int i = 0; i < addressBook.size(); i++)
+				for (int j = 0; j < addressBook.get(i).list.size(); j++)
+					if (addressBook.get(i).list.get(j).getState().equals(state))
+						System.out.println(addressBook.get(i).list.get(j));
+	}
+
+	public static void personByCity() {
+
+		System.out.println("Enter City Name");
+		city = sc.next();
+			for (int i = 0; i < addressBook.size(); i++)
+				for (int j = 0; j < addressBook.get(i).list.size(); j++)
+					if (addressBook.get(i).list.get(j).getCity().equals(city))
+						System.out.println(addressBook.get(i).list.get(j));
 	}
 
 	public static void option() {
@@ -278,6 +306,26 @@ public class AddressBook {
 		}
 	}
 
+	public static void search() {
+
+		System.out.println("Choose Option");
+		System.out.println("1: By City Name" );
+		System.out.println("2: By State Name");
+
+		String choose=sc.next();
+		switch (choose) {
+
+			case "1" :
+				personByCity();
+				break;
+			case "2":
+				personByState();
+				break;
+			default :
+				System.out.println("Wrong Input");
+		}
+	}
+
 	public static void main(String[] args) {
 
 			System.out.println("Welcome to Address Book Program");
@@ -287,6 +335,15 @@ public class AddressBook {
 
 				addAdressBookDetails();
 				option();
+
+				System.out.println("Do You Want to Search Contacts By Certain Details Like by City, State, etc?");
+				System.out.println("Press y if You Want to Search");
+				String num=sc.next();
+				if (num.equals("Y") || num.equals("y")) {
+					search();
+				}else{
+					System.out.println("You Can Proceed Further");
+				}
 
 				System.out.println("Want to Add More Address Book (y/n)");
 				check=sc.next();
