@@ -224,6 +224,9 @@ public class AddressBook {
 
 	public static Scanner sc=new Scanner(System.in);
 
+	public static Map<String, String> dictionaryCity=new HashMap<>();
+	public static Map<String, String> dictionaryState=new HashMap<>();
+
 	public static ArrayList<AddressBookDetails> addressBook=new ArrayList<>();
 
 	public static void addAdressBookDetails() {
@@ -263,6 +266,34 @@ public class AddressBook {
 					if (addressBook.get(i).list.get(j).getCity().equals(city))
 						System.out.println(addressBook.get(i).list.get(j));
 	}
+
+	private static void cityPersonDict() {
+		for (AddressBookDetails address: addressBook)
+			for (ContactDetails contact: address.list) {
+				String name = contact.getFirstName() + " " + contact.getLastName();
+					dictionaryCity.put(name, contact.getCity());
+			}
+
+			System.out.println("Enter City");
+			city= sc.next();
+			for (Map.Entry<String, String> ls : dictionaryCity.entrySet())
+				if (city.equals(ls.getValue()))
+					System.out.println("Name " + ls.getKey());
+	}
+
+	private static void statePersonDict() {
+      for (AddressBookDetails address: addressBook)
+         for (ContactDetails contact: address.list) {
+            String name = contact.getFirstName() + " " + contact.getLastName();
+               dictionaryCity.put(name, contact.getState());
+         }
+
+         System.out.println("Enter State");
+         state= sc.next();
+         for (Map.Entry<String, String> ls : dictionaryCity.entrySet())
+            if (state.equals(ls.getValue()))
+               System.out.println("Name " + ls.getKey());
+   }
 
 	public static void option() {
 
@@ -311,6 +342,8 @@ public class AddressBook {
 		System.out.println("Choose Option");
 		System.out.println("1: By City Name" );
 		System.out.println("2: By State Name");
+		System.out.println("3: View Person in City");
+		System.out.println("4: View Person in State");
 
 		String choose=sc.next();
 		switch (choose) {
@@ -320,6 +353,12 @@ public class AddressBook {
 				break;
 			case "2":
 				personByState();
+				break;
+			case "3" :
+				cityPersonDict();
+				break;
+			case "4" :
+				statePersonDict();
 				break;
 			default :
 				System.out.println("Wrong Input");
@@ -336,7 +375,7 @@ public class AddressBook {
 				addAdressBookDetails();
 				option();
 
-				System.out.println("Do You Want to Search Contacts By Certain Details Like by City, State, etc?");
+				System.out.println("Do You Want to Search or View Contacts By Certain Details Like by City, State, etc?");
 				System.out.println("Press y if You Want to Search");
 				String num=sc.next();
 				if (num.equals("Y") || num.equals("y")) {
