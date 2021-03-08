@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.*;
 
 class ContactDetails{
 
@@ -227,8 +228,9 @@ public class AddressBook {
 	public static Map<String, String> dictionaryCity=new HashMap<>();
 	public static Map<String, String> dictionaryState=new HashMap<>();
 
-	public static Map<String, Integer> cityCount = new HashMap<>();
-	public static Map<String, Integer> stateCount = new HashMap<>();
+	public static List<String> cityCount = new ArrayList<>();
+	public static List<String> stateCount = new ArrayList<>();
+
 	public static ArrayList<AddressBookDetails> addressBook=new ArrayList<>();
 
 	public static void addAdressBookDetails() {
@@ -253,91 +255,65 @@ public class AddressBook {
 
 		System.out.println("Enter State Name");
 		state = sc.next();
-			for (int i = 0; i < addressBook.size(); i++)
-				for (int j = 0; j < addressBook.get(i).list.size(); j++)
-					if (addressBook.get(i).list.get(j).getState().equals(state))
-						System.out.println(addressBook.get(i).list.get(j));
+
+		addressBook.forEach(address -> address.list.stream()
+						.filter(contact -> contact.getState().equals(state))
+						.forEach(System.out::println));
 	}
 
 	public static void personByCity() {
 
 		System.out.println("Enter City Name");
 		city = sc.next();
-			for (int i = 0; i < addressBook.size(); i++)
-				for (int j = 0; j < addressBook.get(i).list.size(); j++)
-					if (addressBook.get(i).list.get(j).getCity().equals(city))
-						System.out.println(addressBook.get(i).list.get(j));
+
+		addressBook.forEach(address -> address.list.stream()
+						.filter(contact -> contact.getCity().equals(city))
+						.forEach(System.out::println));
 	}
 
 	public static void cityPersonDict() {
-		for (AddressBookDetails address: addressBook)
-			for (ContactDetails contact: address.list) {
-				String name = contact.getFirstName() + " " + contact.getLastName();
-					dictionaryCity.put(name, contact.getCity());
-			}
 
-			System.out.println("Enter City");
-			city= sc.next();
-			for (Map.Entry<String, String> ls : dictionaryCity.entrySet())
-				if (city.equals(ls.getValue()))
-					System.out.println("Name " + ls.getKey());
+		System.out.println("Enter City Name");
+		city=sc.next();
+
+		addressBook.forEach(address -> address.list.stream()
+                  .filter(contact -> contact.getCity().equals(city))
+                  .forEach(contact -> dictionaryCity.put((contact.getFirstName() + " " + contact.getLastName()), contact.getCity())));
+
+		dictionaryCity.forEach((key, value) -> System.out.println("Name "+key));
 	}
 
 	public static void statePersonDict() {
-		for (AddressBookDetails address: addressBook)
-			for (ContactDetails contact: address.list) {
-				String name = contact.getFirstName() + " " + contact.getLastName();
-					dictionaryCity.put(name, contact.getState());
-			}
 
-			System.out.println("Enter State");
-			state= sc.next();
-			for (Map.Entry<String, String> ls : dictionaryCity.entrySet())
-				if (state.equals(ls.getValue()))
-					System.out.println("Name " + ls.getKey());
+		System.out.println("Enter State Name");
+		state=sc.next();
+
+		addressBook.forEach(address -> address.list.stream()
+						.filter(contact -> contact.getState().equals(state))
+						.forEach(contact -> dictionaryState.put((contact.getFirstName() + " " + contact.getLastName()), contact.getState())));
+
+      dictionaryState.forEach((key, value) -> System.out.println("Name "+key));
 	}
 
 	public static void setCityCount() {
-			for (AddressBookDetails address: addressBook)
-				for (ContactDetails contact: address.list) {
-					cityCount.put(contact.getCity(), 0);
-				}
 
-			for (Map.Entry<String, Integer> ls : cityCount.entrySet()) {
-				int count = 0;
-				for (AddressBookDetails address: addressBook)
-					for (ContactDetails contact: address.list)
-						if (contact.getCity().equals(ls.getKey())) {
-							count++;
-								cityCount.put(contact.getCity(), count);
-						}
-			}
+		addressBook.forEach(address -> address.list
+						.forEach(contact -> cityCount.add(contact.getCity())));
 
-			for (Map.Entry<String, Integer> ls : cityCount.entrySet()) {
-				System.out.println("City: " + ls.getKey() + " Number of Person: " + ls.getValue());
-			}
-		}
+		cityCount.stream()
+					.distinct()
+					.forEach(placeName -> System.out.println("Number of People from " + placeName + " is : " + cityCount.stream().filter(n1 -> n1.equals(placeName)).count()));
+	}
 
-		public static void setStateCount() {
-			for (AddressBookDetails address: addressBook)
-				for (ContactDetails contact: address.list) {
-					stateCount.put(contact.getState(), 0);
-				}
+	public static void setStateCount() {
 
-			for (Map.Entry<String, Integer> ls : stateCount.entrySet()) {
-				int count = 0;
-				for (AddressBookDetails address: addressBook)
-					for (ContactDetails contact: address.list)
-						if (contact.getState().equals(ls.getKey())) {
-							count++;
-								stateCount.put(contact.getState(), count);
-						}
-			}
+		addressBook.forEach(address -> address.list
+						.forEach(contact -> stateCount.add(contact.getState())));
 
-			for (Map.Entry<String, Integer> ls : stateCount.entrySet()) {
-				System.out.println("State: " + ls.getKey() + " Number of Person: " + ls.getValue());
-			}
-		}
+		stateCount.stream()
+					.distinct()
+					.forEach(placeName -> System.out.println("Number of People from " + placeName + " is : " + stateCount.stream().filter(n1 -> n1.equals(placeName)).count()));
+	}
 
 
 	public static void option() {
@@ -374,9 +350,8 @@ public class AddressBook {
 				break;
 			default:
 				System.out.println("Exit");
+				check = "n";
 
-			System.out.println("Want to Make More Changes in This Address Book? (y/n)");
-			check=sc.next();
 		}
 
 		}
@@ -432,16 +407,17 @@ public class AddressBook {
 				System.out.println("Do You Want to Search or View or Count Contacts By Certain Details Like by City, State, etc?");
 				System.out.println("Press y if You Want to Search");
 				String num=sc.next();
-				if (num.equals("Y") || num.equals("y")) {
-					search();
-				}else{
-					System.out.println("You Can Proceed Further");
-				}
+					if (num.equals("Y") || num.equals("y")) {
+						search();
+					}else{
+						System.out.println("You Can Proceed Further");
+					}
 
 				System.out.println("Want to Add More Address Book (y/n)");
 				check=sc.next();
 			}
 
+			System.out.println("Thank You !!!");
 	}
 }
 
