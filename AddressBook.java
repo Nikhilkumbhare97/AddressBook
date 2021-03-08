@@ -35,9 +35,9 @@ class ContactDetails{
 		return this.lastName;
 	}
 
-   public void setLastName(String lname) {
-      this.lastName = lastName;
-   }
+	public void setLastName(String lname) {
+		this.lastName = lastName;
+	}
 
 	public String getArea() {
 		return this.area;
@@ -90,12 +90,12 @@ class ContactDetails{
 	public String toString(){
 
 		return "Details of: "+ firstName+ " "+lastName+"\n"
-									+"Area: "+area+"\n"
-									+"City: "+city+"\n"
-									+"State: "+state+"\n"
-									+"Zip: "+zip+"\n"
-									+"Phone Number: "+phoneNumber+"\n"
-									+"Email: "+email;
+							+"Area: "+area+"\n"
+							+"City: "+city+"\n"
+							+"State: "+state+"\n"
+							+"Zip: "+zip+"\n"
+							+"Phone Number: "+phoneNumber+"\n"
+							+"Email: "+email;
 	}
 }
 
@@ -227,6 +227,8 @@ public class AddressBook {
 	public static Map<String, String> dictionaryCity=new HashMap<>();
 	public static Map<String, String> dictionaryState=new HashMap<>();
 
+	public static Map<String, Integer> cityCount = new HashMap<>();
+	public static Map<String, Integer> stateCount = new HashMap<>();
 	public static ArrayList<AddressBookDetails> addressBook=new ArrayList<>();
 
 	public static void addAdressBookDetails() {
@@ -267,7 +269,7 @@ public class AddressBook {
 						System.out.println(addressBook.get(i).list.get(j));
 	}
 
-	private static void cityPersonDict() {
+	public static void cityPersonDict() {
 		for (AddressBookDetails address: addressBook)
 			for (ContactDetails contact: address.list) {
 				String name = contact.getFirstName() + " " + contact.getLastName();
@@ -281,19 +283,62 @@ public class AddressBook {
 					System.out.println("Name " + ls.getKey());
 	}
 
-	private static void statePersonDict() {
-      for (AddressBookDetails address: addressBook)
-         for (ContactDetails contact: address.list) {
-            String name = contact.getFirstName() + " " + contact.getLastName();
-               dictionaryCity.put(name, contact.getState());
-         }
+	public static void statePersonDict() {
+		for (AddressBookDetails address: addressBook)
+			for (ContactDetails contact: address.list) {
+				String name = contact.getFirstName() + " " + contact.getLastName();
+					dictionaryCity.put(name, contact.getState());
+			}
 
-         System.out.println("Enter State");
-         state= sc.next();
-         for (Map.Entry<String, String> ls : dictionaryCity.entrySet())
-            if (state.equals(ls.getValue()))
-               System.out.println("Name " + ls.getKey());
-   }
+			System.out.println("Enter State");
+			state= sc.next();
+			for (Map.Entry<String, String> ls : dictionaryCity.entrySet())
+				if (state.equals(ls.getValue()))
+					System.out.println("Name " + ls.getKey());
+	}
+
+	public static void setCityCount() {
+			for (AddressBookDetails address: addressBook)
+				for (ContactDetails contact: address.list) {
+					cityCount.put(contact.getCity(), 0);
+				}
+
+			for (Map.Entry<String, Integer> ls : cityCount.entrySet()) {
+				int count = 0;
+				for (AddressBookDetails address: addressBook)
+					for (ContactDetails contact: address.list)
+						if (contact.getCity().equals(ls.getKey())) {
+							count++;
+								cityCount.put(contact.getCity(), count);
+						}
+			}
+
+			for (Map.Entry<String, Integer> ls : cityCount.entrySet()) {
+				System.out.println("City: " + ls.getKey() + " Number of Person: " + ls.getValue());
+			}
+		}
+
+		public static void setStateCount() {
+			for (AddressBookDetails address: addressBook)
+				for (ContactDetails contact: address.list) {
+					stateCount.put(contact.getState(), 0);
+				}
+
+			for (Map.Entry<String, Integer> ls : stateCount.entrySet()) {
+				int count = 0;
+				for (AddressBookDetails address: addressBook)
+					for (ContactDetails contact: address.list)
+						if (contact.getState().equals(ls.getKey())) {
+							count++;
+								stateCount.put(contact.getState(), count);
+						}
+			}
+
+			for (Map.Entry<String, Integer> ls : stateCount.entrySet()) {
+				System.out.println("State: " + ls.getKey() + " Number of Person: " + ls.getValue());
+			}
+		}
+
 
 	public static void option() {
 
@@ -344,6 +389,9 @@ public class AddressBook {
 		System.out.println("2: By State Name");
 		System.out.println("3: View Person in City");
 		System.out.println("4: View Person in State");
+		System.out.println("5: Total Persons in City");
+		System.out.println("6: Total Persons in State");
+
 
 		String choose=sc.next();
 		switch (choose) {
@@ -360,6 +408,12 @@ public class AddressBook {
 			case "4" :
 				statePersonDict();
 				break;
+			case "5" :
+				setCityCount();
+				break;
+			case "6" :
+				setStateCount();
+				break;
 			default :
 				System.out.println("Wrong Input");
 		}
@@ -375,7 +429,7 @@ public class AddressBook {
 				addAdressBookDetails();
 				option();
 
-				System.out.println("Do You Want to Search or View Contacts By Certain Details Like by City, State, etc?");
+				System.out.println("Do You Want to Search or View or Count Contacts By Certain Details Like by City, State, etc?");
 				System.out.println("Press y if You Want to Search");
 				String num=sc.next();
 				if (num.equals("Y") || num.equals("y")) {
